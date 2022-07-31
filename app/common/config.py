@@ -18,6 +18,7 @@ class Config:
 @dataclass
 class LocalConfig(Config):
     PROJ_RELOAD: bool = True
+    DB_URL: str = "mysql+pymysql://fastAPI@localhost/fastAPI?charset=utf8mb4&password=!IK0134679"
 
 
 @dataclass
