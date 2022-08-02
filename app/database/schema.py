@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from sqlalchemy import (
     Column,
     Integer,
@@ -24,6 +26,7 @@ class BaseMixin:
     def __hash__(self):
         return hash(self.id)
 
+
     @classmethod
     def create(cls, session: Session, auto_commit=False, **kwargs):
         """
@@ -44,6 +47,22 @@ class BaseMixin:
             session.commit()
         return obj
 
+    @classmethod
+    def get(cls, **kwargs):
+        """
+        Simply get a Row
+        :param kwargs:
+        :return:
+        """
+        session = next(db.session())
+        query = session.query(cls)
+        for key, val in kwargs.items():
+            col = getattr(cls, key)
+            query = query.filter(col == val)
+
+        if query.count() > 1:
+            raise Exception("Only one row is supposed to be returned, but got more than one.")
+        return query.first()
 
 class Users(Base, BaseMixin):
     __tablename__ = "users"
